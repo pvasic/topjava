@@ -274,7 +274,7 @@ protected void doPost(HttpServletRequest request, ...) {
 
 > Зачем нужен в jsp `<jsp:useBean id=".." scope="request" type=".."/>` ?
 
-<a href="http://www.java2ee.ru/jsp/useBean.html">jsp:useBean</a> нужен IDEA для автодополнений - она понимает тип переменной, которая уже доступна в JSP (например через setAttribute). И еще эта переменная становится доступной в java вставках. Для вывода в JSP это тэг не обязателен. Если тип переменной JSP не совпадает с тем, что в `jsp:useBean`, будет ошибка.
+[jsp:useBean](http://java-online.ru/jsp-actions.xhtml#useBean) нужен IDEA для автодополнений - она понимает тип переменной, которая уже доступна в JSP (например через setAttribute). И еще эта переменная становится доступной в java вставках. Для вывода в JSP это тэг не обязателен. Если тип переменной JSP не совпадает с тем, что в `jsp:useBean`, будет ошибка.
 
 ----------------------------
 ### Итоги занятия после выполнения ДЗ: 

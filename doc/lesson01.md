@@ -101,6 +101,7 @@
 #### Apply 1_4_forward_to_redirect.patch
 
 - <a href="http://tomcat.apache.org/">Tomcat Home Page</a>
+- [Жизненный цикл сервлета. Для каждого сервлета создается только одна копия](https://metanit.com/java/javaee/4.8.php)
 - <a href="http://java-course.ru/student/book1/servlet/">Сервлеты</a>
 - <a href="https://devcolibri.com/как-создать-servlet-полное-руководство/">Руководство: как создать servlet</a>
 - Томкат менеджер: [http://localhost:8080/manager](http://localhost:8080/manager)

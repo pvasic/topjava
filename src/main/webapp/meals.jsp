@@ -11,11 +11,12 @@
 <html>
 <head>
     <title>Meals</title>
+    <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/style.css" />
 </head>
 <body>
 <hr>
 <h2>Meals</h2>
-<table border="1" cellpadding="10" cellspacing="0">
+<table border="1" cellpadding="5" cellspacing="0">
     <thead>
     <tr>
         <td><h3>Date</h3></td>
@@ -27,7 +28,7 @@
         <tr style="color: ${meal.excess == true ? 'red' : 'green'}">
             <td>
                 <fmt:parseDate value="${ meal.dateTime }" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime"/>
-                <fmt:formatDate pattern="dd-MM-YYYY HH:mm" value="${parsedDateTime}"/>
+                <h4><fmt:formatDate pattern="dd-MM-YYYY HH:mm" value="${parsedDateTime}"/></h4>
             </td>
             <td><h4>${meal.description}</h4></td>
             <td><h4>${meal.calories}</h4></td>

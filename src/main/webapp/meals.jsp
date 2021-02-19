@@ -16,6 +16,8 @@
 <body>
 <hr>
 <h2>Meals</h2>
+<hr>
+<h3><a href="edit.jsp" >Add</a></h3>
 <table border="1" cellpadding="5" cellspacing="0">
     <thead>
     <tr>
@@ -32,6 +34,8 @@
             </td>
             <td><h4>${meal.description}</h4></td>
             <td><h4>${meal.calories}</h4></td>
+            <td><h4><a href="${pageContext.request.contextPath}/meals?action=edit&mealId=${meal.id}">Update</a></h4></td>
+            <td><h4><a href="${pageContext.request.contextPath}/meals?action=delete&mealId=${meal.id}">Delete</a></h4></td>
         </tr>
     </c:forEach>
 </table>

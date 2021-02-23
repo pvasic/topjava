@@ -7,7 +7,7 @@ import ru.javawebinar.topjava.repository.InMemoryRepository;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-public class MealsDateUtil {
+public class MealsDataUtil {
     public static final int CALORIES_PER_DAY = 2000;
 
     public static final CrudRepository storage = new InMemoryRepository();

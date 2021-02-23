@@ -17,18 +17,19 @@
 <h2>Edit Meal</h2>
 <br>
 <form method="post" action="${pageContext.request.contextPath}/meals">
+    <jsp:useBean id="meal" scope="request" class="ru.javawebinar.topjava.model.Meal" />
     <table >
         <tr>
             <td><h3>Date</h3></td>
-            <td><input type="text" name="date" maxlength="50" size="20"></td>
+            <td><input type="datetime-local" name="date" value="${meal.dateTime}" maxlength="50" size="20"></td>
         </tr>
         <tr>
             <td><h3>Description</h3></td>
-            <td><input type="text" name="description" maxlength="50" size="20"></td>
+            <td><input type="text" name="description" value="${meal.description}" maxlength="50" size="20"></td>
         </tr>
         <tr>
             <td><h3>Calories</h3></td>
-            <td><input type="text" name="calories" maxlength="50" size="20"></td>
+            <td><input type="text" name="calories" value="${meal.calories}" maxlength="50" size="20"></td>
         </tr>
         <tr>
             <td><input type="submit" value="Save"></td>

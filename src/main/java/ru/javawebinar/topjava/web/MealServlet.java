@@ -5,9 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletException;
@@ -15,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -58,6 +57,14 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        String dateStartParam = request.getParameter("dateStart");
+        String dateEndParam = request.getParameter("dateEnd");
+        String timeStartParam = request.getParameter("timeStart");
+        String timeEndParam = request.getParameter("timeEnd");
+        LocalDate dateStart = isNull(dateStartParam) ? null : LocalDate.parse(dateStartParam);
+        LocalDate dateEnd = isNull(dateEndParam) ? null : LocalDate.parse(dateEndParam);
+        LocalTime timeStart = isNull(dateStartParam) ? null : LocalTime.parse(timeStartParam);
+        LocalTime timeEnd = isNull(dateEndParam) ? null : LocalTime.parse(timeEndParam);
 
         switch (action == null ? "all" : action) {
             case "delete" -> {
@@ -75,10 +82,17 @@ public class MealServlet extends HttpServlet {
             }
             default -> {
                 log.info("getAll");
-                request.setAttribute("meals", controller.getAll());
+                request.setAttribute("meals",
+                        dateStart == null && dateEnd == null && timeStart == null && timeEnd == null ?
+                                controller.getAll() :
+                                controller.getAll(dateStart, dateEnd, timeStart, timeEnd));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
             }
         }
+    }
+
+    private boolean isNull(String dateStartParam) {
+        return "".equals(dateStartParam) || dateStartParam == null;
     }
 
     private int getId(HttpServletRequest request) {

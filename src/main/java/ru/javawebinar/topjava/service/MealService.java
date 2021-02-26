@@ -18,7 +18,7 @@ public class MealService {
     }
 
     public Meal create(Meal meal, int userId) {
-        return repository.save(meal, meal.getId());
+        return repository.save(meal, userId);
     }
 
     public void delete(int id, int userId) {

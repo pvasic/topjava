@@ -6,41 +6,45 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+import static ru.javawebinar.topjava.web.SecurityUtil.*;
 
 @Controller
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    private static final int USER_ID = SecurityUtil.authUserId();
+    private final MealService service;
 
-    @Autowired
-    private MealService service;
+    public MealRestController(MealService service) {
+        this.service = service;
+    }
 
-    public List<Meal> getAll() {
+    public List<MealTo> getAll() {
         log.info("getAll");
-        return service.getAll(USER_ID);
+        return MealsUtil.getTos(service.getAll(authUserId()), authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id, USER_ID);
+        return service.get(id, authUserId());
     }
 
     public Meal create(Meal meal) {
         log.info("create {}", meal);
         checkNew(meal);
-        return service.create(meal, USER_ID);
+        return service.create(meal, authUserId());
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id, USER_ID);
+        service.delete(id, authUserId());
     }
 
     public void update(Meal meal, int id) {
@@ -48,5 +52,4 @@ public class MealRestController {
         assureIdConsistent(meal, id);
         service.update(meal, id);
     }
-
 }

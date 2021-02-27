@@ -57,17 +57,7 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
         String action = request.getParameter("action");
-        String dateStartParam = request.getParameter("dateStart");
-        String dateEndParam = request.getParameter("dateEnd");
-        String timeStartParam = request.getParameter("timeStart");
-        String timeEndParam = request.getParameter("timeEnd");
-        LocalDate dateStart = isNull(dateStartParam) ? null : LocalDate.parse(dateStartParam);
-        LocalDate dateEnd = isNull(dateEndParam) ? null : LocalDate.parse(dateEndParam);
-        LocalTime timeStart = isNull(timeStartParam) ? null : LocalTime.parse(timeStartParam);
-        LocalTime timeEnd = isNull(timeEndParam) ? null : LocalTime.parse(timeEndParam);
-
         switch (action == null ? "all" : action) {
             case "delete" -> {
                 int id = getId(request);
@@ -84,14 +74,44 @@ public class MealServlet extends HttpServlet {
             }
             default -> {
                 log.info("getAll");
-                request.setAttribute("meals",
-                        dateStart == null && dateEnd == null && timeStart == null && timeEnd == null ?
+                String dateStartParam = request.getParameter("dateStart");
+                String dateEndParam = request.getParameter("dateEnd");
+                String timeStartParam = request.getParameter("timeStart");
+                String timeEndParam = request.getParameter("timeEnd");
+                LocalDate dateStart;
+                LocalDate dateEnd;
+                LocalTime timeStart;
+                LocalTime timeEnd;
+
+                boolean empty = true;
+                if (isNull(dateStartParam)) {
+                    dateStart = LocalDate.MIN;
+                } else {
+                    empty = false;
+                    dateStart = LocalDate.parse(dateStartParam);
+                }
+                if (isNull(dateEndParam)) {
+                    dateEnd = LocalDate.MAX;
+                } else {
+                    empty = false;
+                    dateEnd = LocalDate.parse(dateEndParam);
+                }
+                if (isNull(timeStartParam)) {
+                    timeStart = LocalTime.MIN;
+                } else {
+                    empty = false;
+                    timeStart = LocalTime.parse(timeStartParam);
+                }
+                if (isNull(timeEndParam)) {
+                    timeEnd = LocalTime.MAX;
+                } else {
+                    empty = false;
+                    timeEnd = LocalTime.parse(timeEndParam);
+                }
+
+                request.setAttribute("meals", empty ?
                                 controller.getAll() :
-                                controller.getAll(
-                                        dateStart == null ? LocalDate.MIN : dateStart,
-                                        dateEnd == null ? LocalDate.MAX : dateEnd,
-                                        timeStart == null ? LocalTime.MIN : timeStart,
-                                        timeEnd == null ? LocalTime.MAX : timeEnd));
+                                controller.getAll(dateStart, dateEnd, timeStart, timeEnd));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
             }
         }

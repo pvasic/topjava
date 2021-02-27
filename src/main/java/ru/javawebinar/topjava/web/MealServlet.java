@@ -56,6 +56,8 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
         String dateStartParam = request.getParameter("dateStart");
         String dateEndParam = request.getParameter("dateEnd");
@@ -63,8 +65,8 @@ public class MealServlet extends HttpServlet {
         String timeEndParam = request.getParameter("timeEnd");
         LocalDate dateStart = isNull(dateStartParam) ? null : LocalDate.parse(dateStartParam);
         LocalDate dateEnd = isNull(dateEndParam) ? null : LocalDate.parse(dateEndParam);
-        LocalTime timeStart = isNull(dateStartParam) ? null : LocalTime.parse(timeStartParam);
-        LocalTime timeEnd = isNull(dateEndParam) ? null : LocalTime.parse(timeEndParam);
+        LocalTime timeStart = isNull(timeStartParam) ? null : LocalTime.parse(timeStartParam);
+        LocalTime timeEnd = isNull(timeEndParam) ? null : LocalTime.parse(timeEndParam);
 
         switch (action == null ? "all" : action) {
             case "delete" -> {
@@ -85,7 +87,11 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meals",
                         dateStart == null && dateEnd == null && timeStart == null && timeEnd == null ?
                                 controller.getAll() :
-                                controller.getAll(dateStart, dateEnd, timeStart, timeEnd));
+                                controller.getAll(
+                                        dateStart == null ? LocalDate.MIN : dateStart,
+                                        dateEnd == null ? LocalDate.MAX : dateEnd,
+                                        timeStart == null ? LocalTime.MIN : timeStart,
+                                        timeEnd == null ? LocalTime.MAX : timeEnd));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
             }
         }

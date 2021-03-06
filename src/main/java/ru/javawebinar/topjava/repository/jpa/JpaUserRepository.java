@@ -26,6 +26,8 @@ public class JpaUserRepository implements UserRepository {
     @PersistenceContext
     private EntityManager em;
 
+
+//  You can get the status of a transaction with debug: TransactionAspectSupport.currentTransactionStatus();
     @Override
     @Transactional
     public User save(User user) {
@@ -46,9 +48,12 @@ public class JpaUserRepository implements UserRepository {
     @Transactional
     public boolean delete(int id) {
 
-/*      User ref = em.getReference(User.class, id);
+/*      // At the same time, we only need id from User. A lazy proxy is created above the id, which accesses the database when requesting any field.
+        // That is, we will not have a user request to the database: check the Hibernate logs.
+        User ref = em.getReference(User.class, id);
         em.remove(ref);
 
+        // Language JPQL
         Query query = em.createQuery("DELETE FROM User u WHERE u.id=:id");
         return query.setParameter("id", id).executeUpdate() != 0;
 */

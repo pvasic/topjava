@@ -1,5 +1,8 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.AbstractTest;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -24,10 +28,25 @@ import static ru.javawebinar.topjava.UserTestData.*;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class UserServiceTest {
+public class UserServiceTest extends AbstractTest {
 
     @Autowired
     private UserService service;
+
+    @Before
+    public void setUp() {
+        starting();
+    }
+
+    @After
+    public void after() {
+        result.append(finished());
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        System.out.println(result);
+    }
 
     @Test
     public void create() {

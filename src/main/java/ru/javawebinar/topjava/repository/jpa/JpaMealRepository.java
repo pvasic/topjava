@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.jpa;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,11 @@ public class JpaMealRepository implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            return em.merge(meal);
+            if (get(meal.getId(), userId) == null) {
+                return null;
+            } else {
+                return em.merge(meal);
+            }
         }
     }
 
@@ -46,9 +51,11 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        Map<String, Object> prop = new HashMap<>();
-        prop.put("user", getRef(userId));
-        return em.find(Meal.class, id, prop);
+        List<Meal> meals = em.createNamedQuery(Meal.GET, Meal.class)
+                .setParameter(1, id)
+                .setParameter(2, getRef(userId))
+                .getResultList();
+        return DataAccessUtils.singleResult(meals);
     }
 
     @Override

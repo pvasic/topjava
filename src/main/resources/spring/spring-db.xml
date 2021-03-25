@@ -65,8 +65,8 @@
     <beans profile="datajpa,jpa">
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
-              p:packagesToScan="ru.javawebinar.**.model">
-            <!--p:persistenceUnitName="persistenceUnit">-->
+              p:packagesToScan="ru.javawebinar.**.model"
+              p:persistenceUnitName="persistenceUnit">
 
             <property name="jpaPropertyMap">
                 <map>

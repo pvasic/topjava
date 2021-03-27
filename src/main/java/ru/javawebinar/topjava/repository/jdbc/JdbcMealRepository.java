@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +28,42 @@ public class JdbcMealRepository implements MealRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final SimpleJdbcInsert insertMeal;
+
+    private ConvertDateTime convertDateTime;
+
+    interface ConvertDateTime<T> {
+        T convertDT(LocalDateTime dateTime);
+    }
+
+    public static class WithoutChangeDateTime implements ConvertDateTime<LocalDateTime> {
+        @Override
+        public LocalDateTime convertDT(LocalDateTime dateTime) {
+            return dateTime;
+        }
+    }
+
+    public static class TimestampDateTime implements ConvertDateTime<Timestamp> {
+        @Override
+        public Timestamp convertDT(LocalDateTime dateTime) {
+            return Timestamp.valueOf(dateTime);
+        }
+    }
+
+    @Bean
+    @Profile("postgres")
+    public WithoutChangeDateTime getWithoutDateTime() {
+        WithoutChangeDateTime wdt = new WithoutChangeDateTime();
+        convertDateTime = wdt;
+        return wdt;
+    }
+
+    @Bean
+    @Profile("hsqldb")
+    public TimestampDateTime getTimestampDateTime() {
+        TimestampDateTime tdt = new TimestampDateTime();
+        convertDateTime = tdt;
+        return tdt;
+    }
 
     @Autowired
     public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
@@ -42,7 +81,7 @@ public class JdbcMealRepository implements MealRepository {
                 .addValue("id", meal.getId())
                 .addValue("description", meal.getDescription())
                 .addValue("calories", meal.getCalories())
-                .addValue("date_time", meal.getDateTime())
+                .addValue("date_time", convertDateTime.convertDT(meal.getDateTime()))
                 .addValue("user_id", userId);
 
         if (meal.isNew()) {
@@ -81,6 +120,6 @@ public class JdbcMealRepository implements MealRepository {
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=?  AND date_time >=  ? AND date_time < ? ORDER BY date_time DESC",
-                ROW_MAPPER, userId, startDateTime, endDateTime);
+                ROW_MAPPER, userId, convertDateTime.convertDT(startDateTime), convertDateTime.convertDT(endDateTime));
     }
 }

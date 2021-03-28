@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava;
 
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import ru.javawebinar.topjava.model.Role;
@@ -14,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SpringMain {
@@ -28,7 +28,7 @@ public class SpringMain {
             appCtx = springGenericCtx;
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
-            adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ADMIN));
+            adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Collections.emptyList(), Role.ADMIN));
             System.out.println();
 
             MealRestController mealController = appCtx.getBean(MealRestController.class);

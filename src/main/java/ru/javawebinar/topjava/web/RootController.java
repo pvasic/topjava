@@ -5,27 +5,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import ru.javawebinar.topjava.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class RootController {
+@RequestMapping("/users")
+public class RootController extends AbstractController {
+
     @Autowired
-    private UserService service;
+    protected UserService userService;
 
-    @GetMapping("/")
-    public String root() {
-        return "index";
-    }
-
-    @GetMapping("/users")
+    @GetMapping
     public String getUsers(Model model) {
-        model.addAttribute("users", service.getAll());
+        model.addAttribute("users", userService.getAll());
         return "users";
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public String setUser(HttpServletRequest request) {
         int userId = Integer.parseInt(request.getParameter("userId"));
         SecurityUtil.setAuthUserId(userId);

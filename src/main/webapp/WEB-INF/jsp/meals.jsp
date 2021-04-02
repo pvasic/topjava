@@ -11,7 +11,7 @@
 <section>
     <h3><a href="${pageContext.request.contextPath}"><spring:message code="app.home"/></a>
     <hr/>
-    <h2>Meals</h2>
+        <h3><spring:message code="meal.title"/></h3>
     <form method="get" action="${pageContext.request.contextPath}/meals/between">
         <input type="hidden" name="action" value="filter">
         <dl>

@@ -15,6 +15,8 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
@@ -42,7 +44,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     @Transactional
-    public User save(User user) {
+    public User save(@NotNull User user) {
         BeanPropertySqlParameterSource parameterSourceUser = new BeanPropertySqlParameterSource(user);
         Integer key;
         if (user.isNew()) {
@@ -75,12 +77,12 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     @Transactional
-    public boolean delete(int id) {
+    public boolean delete(@NotNull int id) {
         return jdbcTemplate.update("DELETE FROM users WHERE id=?", id) != 0;
     }
 
     @Override
-    public User get(int id) {
+    public User get(@NotNull int id) {
         List<User> users = jdbcTemplate.query("SELECT u.*, ur.role as roles " +
                 "FROM users u LEFT JOIN" +
                 "    (SELECT * FROM user_roles) ur ON u.id=ur.user_id " +
@@ -94,7 +96,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public User getByEmail(String email) {
+    public User getByEmail(@Email String email) {
         List<User> users = jdbcTemplate.query("SELECT u.*, ur.role as roles " +
                 "FROM users u LEFT JOIN" +
                 "    (SELECT * FROM user_roles) ur ON u.id=ur.user_id " +

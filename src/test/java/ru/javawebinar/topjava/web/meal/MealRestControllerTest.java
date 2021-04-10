@@ -55,6 +55,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_TO_MATCHER.contentJson(getTos(meals, DEFAULT_CALORIES_PER_DAY)));
     }
@@ -64,6 +65,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
                 .andExpect(status().isOk())
                 .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MEAL_MATCHER.contentJson(meal1));
     }
 
@@ -81,6 +83,8 @@ class MealRestControllerTest extends AbstractControllerTest {
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newMeal)))
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
         Meal created = readFromJson(action, Meal.class);
@@ -96,6 +100,7 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
                 .andExpect(status().isOk());
 
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
@@ -103,11 +108,11 @@ class MealRestControllerTest extends AbstractControllerTest {
 
     @Test
     void getBetween() throws Exception {
-        MvcResult result = perform(MockMvcRequestBuilders.get(REST_URL + "between" + "?startDate=" + START_DATE + "&startTime=" + START_TIME + "&endDate=" + END_DATE + "&endTime=" + END_TIME)
+        MvcResult result = perform(MockMvcRequestBuilders.get(REST_URL + "between" + "/" + START_DATE + "/" + START_TIME + "/" + END_DATE + "/" + END_TIME)
         .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andDo(print())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         List<MealTo> meals = readListFromJsonMvcResult(result, MealTo.class);

@@ -1,8 +1,21 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/d1a6f6d0b4404f32bd59394074a3c1b6)](https://www.codacy.com/gh/JavaWebinar/topjava/dashboard)
 [![Build Status](https://api.travis-ci.com/JavaWebinar/topjava.svg?branch=master)](https://travis-ci.com/JavaWebinar/topjava)
 
+## Тестирование curl:
+###users:
+-     curl "http://localhost:8080/topjava/rest/admin/users"
+-     curl "http://localhost:8080/topjava/rest/admin/users/100001"
+
+
+###meals:
+-     curl "http://localhost:8080/topjava/rest/meals"
+-     curl "http://localhost:8080/topjava/rest/meals/100006"
+-     curl -X DELETE "http://localhost:8080/topjava/rest/meals/100007"
+-     curl -X PUT -H "Content-Type: application/json" -d {\"id\":100004\",\"dateTime\":\"2020-01-30T20:00:00\",\"description":\"New meal\",\"calories\":500} "http://localhost:8080/topjava/rest/meals/100004"
+
 Java Enterprise Online Project
 ===============================
+
 
 Наиболее востребованные технологии /инструменты / фреймворки Java Enterprise:
 Maven/ Spring/ Security/ JPA(Hibernate)/ REST(Jackson)/ Bootstrap(CSS)/ jQuery + plugins.

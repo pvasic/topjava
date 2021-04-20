@@ -13,6 +13,30 @@
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
         <hr>
+        <form id="filteredForm">
+            <dl>
+                <dt>From Date (inclusive):</dt>
+                <dt><spring:message code="meal.startDate"/>:</dt>
+                <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
+            </dl>
+            <dl>
+                <dt>To Date (inclusive):</dt>
+                <dt><spring:message code="meal.endDate"/>:</dt>
+                <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
+            </dl>
+            <dl>
+                <dt>From Time (inclusive):</dt>
+                <dt><spring:message code="meal.startTime"/>:</dt>
+                <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
+            </dl>
+            <dl>
+                <dt>To Time (exclusive):</dt>
+                <dt><spring:message code="meal.endTime"/>:</dt>
+                <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
+            </dl>
+            <button type="submit" onclick="filter()"><spring:message code="meal.filter"/></button>
+        </form>
+        <hr>
         <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
             <spring:message code="common.add"/>

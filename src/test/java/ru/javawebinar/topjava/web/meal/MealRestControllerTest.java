@@ -43,6 +43,12 @@ class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getUnauth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     void delete() throws Exception {
         perform(MockMvcRequestBuilders.delete(REST_URL + MEAL1_ID)
                 .with(userHttpBasic(user)))
@@ -55,7 +61,8 @@ class MealRestControllerTest extends AbstractControllerTest {
         Meal updated = getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(user)))
                 .andExpect(status().isNoContent());
 
         MEAL_MATCHER.assertMatch(mealService.get(MEAL1_ID, USER_ID), updated);
@@ -67,7 +74,8 @@ class MealRestControllerTest extends AbstractControllerTest {
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(newMeal)));
+                .content(JsonUtil.writeValue(newMeal))
+                .with(userHttpBasic(user)));
 
         Meal created = readFromJson(action, Meal.class);
         int newId = created.id();
